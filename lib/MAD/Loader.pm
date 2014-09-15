@@ -12,6 +12,7 @@ our @EXPORT_OK = qw{
   fqn
   load_module
   build_object
+  load_and_new
 };
 
 has 'prefix' => (
@@ -181,6 +182,20 @@ sub build_object {
     return $instance;
 }
 
+sub load_and_new {
+    my (%args) = @_;
+
+    return build_object(
+        module => load_module(
+            module => $args{module},
+            prefix => $args{prefix},
+            inc    => [@INC],
+        ),
+        builder => 'new',
+        args    => $args{args},
+    );
+}
+
 sub _build_inc {
     my ($self) = @_;
 
@@ -342,6 +357,14 @@ An ArrayRef of parameters to be passed to the builder method.
 
 An error handler to be executed when found errors. Defaults to
 C<\&Carp::croak>.
+
+=head2 load_and_new( %args )
+
+A shortcut for C<load_module> then C<build_object> with some predefined
+args.
+
+C<inc> is set to C<@INC> and c<builder> to C<'new'>. It is expected to deal
+only with module, prefix and builder args.
 
 
 =head1 METHODS
