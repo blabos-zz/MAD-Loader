@@ -1,5 +1,6 @@
 local
 inc
+.build
 .DS_Store
 .includepath
 .project
